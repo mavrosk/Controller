@@ -1,0 +1,20 @@
+{
+  "name": "controller",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hypersolution/v4l2camera": "^1.0.6",
+    "@serialport/parser-readline": "^9.0.7",
+    "async": "^3.2.1",
+    "asynquence": "^0.10.2",
+    "node-webcam": "^0.8.0",
+    "serialport": "^9.2.0"
+  }
+}

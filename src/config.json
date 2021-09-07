@@ -1,0 +1,13 @@
+{
+  "camera": {
+    "picturesFolder": "photos",
+    "parameters": {
+      "cam": {
+        "brightness": 0,
+        "contrast": 0,
+        "sharpness": 0,
+        "white_balance_temperature": 2600
+      }
+    }
+  }
+}
