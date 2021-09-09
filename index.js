@@ -8,7 +8,12 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
+var devices = [];
 
+camera.getAvailableCameras((videos)=> {
+    devices = videos;
+    console.log(devices);
+});
 
 // controller.init(()=> {
 
@@ -29,18 +34,17 @@ rl.on('line', async function(line) {
         controller.write('q')
     } else {
         var options = line.split('.')
-        var focus = parseInt(options[0]);
-        var exposure = parseInt(options[1]);
-        camera.getAvailableCameras((devices)=> {
-            console.log(devices);
-            for(var i=0;i<devices.length;i+=2) {
-                device = devices[i]
-                deviceId = parseInt(device.slice(device.length - 1))/2;
-                camera.takePicture(device, { focus, exposure: exposure*1000 }, (result) => {
-                    fs.createWriteStream(conf.camera.picturesFolder + "/camera" + deviceId + "_f" + focus + "_e" + exposure + ".jpg").end(result);
-                });
-            }
-        });
+        var focus = 300 || parseInt(options[0]);
+        var exposure = 5 || parseInt(options[1]);
+        console.log(devices);
+        for(var i=0;i<devices.length;i++) {
+            device = devices[i]
+            camera.takePicture(device, { focus, exposure: exposure*1000 }, (result, device) => {
+                fs.createWriteStream(conf.camera.picturesFolder + "/camera" + (i+1) + "_f" + focus + "_e" + exposure + ".jpg").end(result);
+            });
+
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
         
     }
     

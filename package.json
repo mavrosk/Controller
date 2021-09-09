@@ -14,7 +14,6 @@
     "@serialport/parser-readline": "^9.0.7",
     "async": "^3.2.1",
     "asynquence": "^0.10.2",
-    "node-webcam": "^0.8.0",
     "serialport": "^9.2.0"
   }
 }
