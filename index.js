@@ -1,8 +1,10 @@
 const camera = require('./camera')
 var conf = require('./config.json');
-// const controller = require('./controller')
+const controller = require('./controller')
 var fs = require("fs");
 const readline = require("readline");
+const {io} = require('socket.io-client');
+const socket = io("https://greenpanda-socket-server.herokuapp.com/")
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -15,9 +17,24 @@ camera.getAvailableCameras((videos)=> {
     console.log(devices);
 });
 
-// controller.init(()=> {
+controller.init(()=> {
+    console.log("controller ready")
+});
 
-// });
+
+async function recTakePictures(i) {
+    if(i==devices.length) return;
+
+    controller.write(conf.camera.parameters['camera'+i].led_command)
+    console.log(conf.camera.parameters['camera'+i].led_command)
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    camera.takePicture(i, { path: conf.camera.picturesFolder + "/camera" + (i+1) + ".jpg" }, (error, result) => {
+        if(error) console.error(error);
+
+        controller.write('X')
+        recTakePictures(i+1)
+    });
+}
 
 rl.setPrompt('PORT> ');
 rl.prompt();
@@ -25,27 +42,19 @@ rl.prompt();
 rl.on('line', async function(line) {
     if(line === 'play') {
 
-        controller.write(4)
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        controller.play(1);camera.takePictures();
-        await new Promise(resolve => setTimeout(resolve, 5000));
-        controller.write(2)
-        await new Promise(resolve => setTimeout(resolve, 5000));
-        controller.write('q')
+       // controller.write(4)
+        //await new Promise(resolve => setTimeout(resolve, 2000));
+       //controller.play(1);
+       recTakePictures
+        //camera.takePicture();
+        //await new Promise(resolve => setTimeout(resolve, 5000));
+       // controller.write(2)
+       // await new Promise(resolve => setTimeout(resolve, 5000));
+        //controller.write('q')
+    } else if(line === 'photos') {
+        recTakePictures(0)
     } else {
-        var options = line.split('.')
-        var focus = 300 || parseInt(options[0]);
-        var exposure = 5 || parseInt(options[1]);
-        console.log(devices);
-        for(var i=0;i<devices.length;i++) {
-            device = devices[i]
-            camera.takePicture(device, { focus, exposure: exposure*1000 }, (result, device) => {
-                fs.createWriteStream(conf.camera.picturesFolder + "/camera" + (i+1) + "_f" + focus + "_e" + exposure + ".jpg").end(result);
-            });
-
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-        
+        controller.write(line)
     }
     
     rl.prompt();

@@ -14,6 +14,12 @@
     "@serialport/parser-readline": "^9.0.7",
     "async": "^3.2.1",
     "asynquence": "^0.10.2",
-    "serialport": "^9.2.0"
+    "fs": "0.0.1-security",
+    "jpeg-js": "^0.4.3",
+    "path": "^0.12.7",
+    "pngjs": "^6.0.0",
+    "serialport": "^9.2.5",
+    "sleep-synchronously": "^2.0.0",
+    "socket.io-client": "^4.3.2"
   }
 }

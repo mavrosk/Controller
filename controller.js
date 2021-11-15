@@ -8,7 +8,10 @@ var parser = null;
 
 var init = (cb) => {
     SerialPort.list().then((ports) => {
-        ports = ports.filter(p => p.manufacturer?.includes('Arduino'))
+        ports = ports.filter(p => {
+            if(p.manufacturer) return p.manufacturer.includes('Arduino')
+            return false;
+        })
         portObj = ports[0];
         // console.log(portObj);
         port = new SerialPort(portObj.path, { baudRate: 57600 })
